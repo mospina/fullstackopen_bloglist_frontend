@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Login from "./components/Login";
@@ -12,6 +12,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const blogFormRef = useRef();
 
   const handleLogin = async (credential) => {
     try {
@@ -30,6 +32,7 @@ const App = () => {
 
   const handleCreateBlog = async (blogInput) => {
     try {
+      blogFormRef.current.toggleVisibility();
       const newBlog = await blogService.create(blogInput);
       flashMessage(
         `a new blog ${newBlog.title} by ${newBlog.author} added`,
@@ -75,7 +78,7 @@ const App = () => {
         <p>
           {user.name} <button onClick={handleLogout}>logout</button>
         </p>
-        <Togglable buttonLabel="new blog">
+        <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <BlogForm handleSubmit={handleCreateBlog} />
         </Togglable>
         {blogs.map((blog) => (
