@@ -5,11 +5,12 @@ import Login from "./components/Login";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import "./App.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const handleLogin = async (credential) => {
     try {
@@ -17,10 +18,7 @@ const App = () => {
       setUser(user);
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
     } catch (exception) {
-      setErrorMessage("Wrong Credentials");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      flashMessage("Wrong Credentials", "error");
     }
   };
 
@@ -32,13 +30,21 @@ const App = () => {
   const handleCreateBlog = async (blogInput) => {
     try {
       const newBlog = await blogService.create(blogInput);
+      flashMessage(
+        `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        "info"
+      );
       setBlogs([...blogs, newBlog]);
     } catch (error) {
-      setErrorMessage(error.message);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      flashMessage(error.message, "error");
     }
+  };
+
+  const flashMessage = (message, level) => {
+    setMessage({ message, level });
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
   };
 
   useEffect(() => {
@@ -56,18 +62,18 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification message={errorMessage} />
+        <Notification message={message} />
         <Login handleLogin={handleLogin} />
       </div>
     );
   } else {
     return (
       <div>
+        <Notification message={message} />
         <h2>blogs</h2>
         <p>
           {user.name} <button onClick={handleLogout}>logout</button>
         </p>
-        <Notification message={errorMessage} />
         <BlogForm handleSubmit={handleCreateBlog} />
         {blogs.map((blog) => (
           <Blog key={blog.id} blog={blog} />
