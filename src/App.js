@@ -56,6 +56,16 @@ const App = () => {
     }
   };
 
+  const handleDeleteBlog = async (id) => {
+    try {
+      await blogService.remove(id);
+      flashMessage("Blog deleted", "info");
+      setBlogs(blogs.filter((blog) => blog.id !== id));
+    } catch (error) {
+      flashMessage(error.message, "error");
+    }
+  };
+
   const flashMessage = (message, level) => {
     setMessage({ message, level });
     setTimeout(() => {
@@ -96,12 +106,18 @@ const App = () => {
         {blogs
           .sort((a, b) => {
             if (a.likes > b.likes) return -1;
-            else return 1;
+            else if (a.likes < b.likes) return 1;
 
             return 0;
           })
           .map((blog) => (
-            <Blog key={blog.id} blog={blog} onUpdate={handleUpdateBlog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              user={user}
+              onUpdate={handleUpdateBlog}
+              onDelete={handleDeleteBlog}
+            />
           ))}
       </div>
     );

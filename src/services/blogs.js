@@ -30,4 +30,12 @@ const update = async (id, changes) => {
   return response.data;
 };
 
-export default { getAll, create, update };
+const remove = async (id) => {
+  const config = {
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  };
+  const response = await axios.delete(`${baseUrl}/${id}`, config);
+  return response.status;
+};
+
+export default { getAll, create, update, remove };
