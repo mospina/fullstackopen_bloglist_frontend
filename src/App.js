@@ -93,9 +93,16 @@ const App = () => {
         <Togglable buttonLabel="new blog" ref={blogFormRef}>
           <BlogForm handleSubmit={handleCreateBlog} />
         </Togglable>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} onUpdate={handleUpdateBlog} />
-        ))}
+        {blogs
+          .sort((a, b) => {
+            if (a.likes > b.likes) return -1;
+            else return 1;
+
+            return 0;
+          })
+          .map((blog) => (
+            <Blog key={blog.id} blog={blog} onUpdate={handleUpdateBlog} />
+          ))}
       </div>
     );
   }
