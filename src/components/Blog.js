@@ -1,27 +1,27 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 const Blog = ({ blog, user, onUpdate, onDelete }) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   const handleAddLike = () => {
-    const changes = { ...blog, user: blog.user.id, likes: blog.likes + 1 };
-    onUpdate(blog.id, changes);
-  };
+    const changes = { ...blog, user: blog.user.id, likes: blog.likes + 1 }
+    onUpdate(blog.id, changes)
+  }
 
   const handleDelete = () => {
-    const result = window.confirm(`Delete ${blog.title}?`);
-    if (!result) return;
+    const result = window.confirm(`Delete ${blog.title}?`)
+    if (!result) return
 
-    onDelete(blog.id);
-  };
+    onDelete(blog.id)
+  }
 
   return (
     <div style={blogStyle}>
@@ -47,7 +47,7 @@ const Blog = ({ blog, user, onUpdate, onDelete }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
