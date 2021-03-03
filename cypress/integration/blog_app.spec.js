@@ -47,5 +47,21 @@ describe("Blog App", function () {
 
       cy.contains("a blog created by cypress");
     });
+
+    describe("and a blog exists", function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: "an existing blog",
+          author: "author",
+          url: "http://example.com",
+        });
+      });
+      it("can be liked", function () {
+        cy.contains("an existing blog").contains("view").click();
+        cy.contains("like").click();
+
+        cy.contains("likes: 1");
+      });
+    });
   });
 });
