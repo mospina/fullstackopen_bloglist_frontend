@@ -62,6 +62,13 @@ describe("Blog App", function () {
 
         cy.contains("likes: 1");
       });
+
+      it("can be deleted by owner", function () {
+        cy.contains("an existing blog").contains("view").click();
+        cy.contains("remove").click();
+
+        cy.get("#blog-list").children().should("have.length", 0);
+      });
     });
   });
 });
