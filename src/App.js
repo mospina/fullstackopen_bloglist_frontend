@@ -60,7 +60,7 @@ const App = () => {
     try {
       const updatedBlog = await blogService.update(id, changes);
       flashMessage(`${updatedBlog.title} was updated`, "info");
-      dispatch(updateBlog(updateBlog));
+      dispatch(updateBlog(updatedBlog));
     } catch (error) {
       flashMessage(error.message, "error");
     }
