@@ -43,7 +43,7 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogappUser");
   };
 
-  const handleCreateBlog = async (blogInput) => {
+  const handleCreateBlog = (blogInput) => {
     try {
       blogFormRef.current.toggleVisibility();
       dispatch(createBlog(blogInput));
@@ -56,21 +56,20 @@ const App = () => {
     }
   };
 
-  const handleUpdateBlog = async (id, changes) => {
+  const handleUpdateBlog = (id, changes) => {
     try {
-      const updatedBlog = await blogService.update(id, changes);
+      const updatedBlog = dispatch(updateBlog(id, changes));
+      console.log(updatedBlog);
       flashMessage(`${updatedBlog.title} was updated`, "info");
-      dispatch(updateBlog(updatedBlog));
     } catch (error) {
       flashMessage(error.message, "error");
     }
   };
 
-  const handleDeleteBlog = async (id) => {
+  const handleDeleteBlog = (id) => {
     try {
-      await blogService.remove(id);
-      flashMessage("Blog deleted", "info");
       dispatch(deleteBlog(id));
+      flashMessage("Blog deleted", "info");
     } catch (error) {
       flashMessage(error.message, "error");
     }

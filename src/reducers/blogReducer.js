@@ -32,17 +32,24 @@ const blogReducer = (state = [], action) => {
   }
 };
 
-export const updateBlog = (updatedBlog) => {
-  return {
-    type: "UPDATE_BLOG",
-    data: updatedBlog,
+export const updateBlog = (id, changes) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.update(id, changes);
+    dispatch({
+      type: "UPDATE_BLOG",
+      data: updatedBlog,
+    });
+    return updatedBlog;
   };
 };
 
-export const deleteBlog = (blogId) => {
-  return {
-    type: "DELETE_BLOG",
-    data: blogId,
+export const deleteBlog = (id) => {
+  return async (dispatch) => {
+    await blogService.remove(id);
+    dispatch({
+      type: "DELETE_BLOG",
+      data: id,
+    });
   };
 };
 
