@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Login from "./components/Login";
@@ -8,14 +8,21 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import {
+  initializeBlogs,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+} from "./reducers/blogReducer";
+import {
   setNotification,
   deleteNotification,
 } from "./reducers/notificationReducer";
 import "./App.css";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
+
+  const blogs = useSelector(({ blogs }) => blogs);
 
   const dispatch = useDispatch();
 
@@ -39,12 +46,11 @@ const App = () => {
   const handleCreateBlog = async (blogInput) => {
     try {
       blogFormRef.current.toggleVisibility();
-      const newBlog = await blogService.create(blogInput);
+      dispatch(createBlog(blogInput));
       flashMessage(
-        `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        `a new blog ${blogInput.title} by ${blogInput.author} added`,
         "info"
       );
-      setBlogs([...blogs, newBlog]);
     } catch (error) {
       flashMessage(error.message, "error");
     }
@@ -54,9 +60,7 @@ const App = () => {
     try {
       const updatedBlog = await blogService.update(id, changes);
       flashMessage(`${updatedBlog.title} was updated`, "info");
-      setBlogs(
-        blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
-      );
+      dispatch(updateBlog(updateBlog));
     } catch (error) {
       flashMessage(error.message, "error");
     }
@@ -66,7 +70,7 @@ const App = () => {
     try {
       await blogService.remove(id);
       flashMessage("Blog deleted", "info");
-      setBlogs(blogs.filter((blog) => blog.id !== id));
+      dispatch(deleteBlog(id));
     } catch (error) {
       flashMessage(error.message, "error");
     }
@@ -80,8 +84,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
