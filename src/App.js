@@ -5,7 +5,6 @@ import BlogForm from "./components/BlogForm";
 import Login from "./components/Login";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
-import blogService from "./services/blogs";
 import loginService from "./services/login";
 import {
   initializeBlogs,
