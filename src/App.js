@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Login from "./components/Login";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
-import loginService from "./services/login";
+import { login, logout, setUser } from "./reducers/userReducer";
 import {
   initializeBlogs,
   createBlog,
@@ -19,7 +19,7 @@ import {
 import "./App.css";
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const user = useSelector(({ user }) => user);
 
   const blogs = useSelector(({ blogs }) => blogs);
 
@@ -27,19 +27,16 @@ const App = () => {
 
   const blogFormRef = useRef();
 
-  const handleLogin = async (credential) => {
+  const handleLogin = (credential) => {
     try {
-      const user = await loginService.login(credential);
-      setUser(user);
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+      dispatch(login(credential));
     } catch (exception) {
       flashMessage("Wrong Credentials", "error");
     }
   };
 
   const handleLogout = () => {
-    setUser(null);
-    window.localStorage.removeItem("loggedBlogappUser");
+    dispatch(logout());
   };
 
   const handleCreateBlog = (blogInput) => {
@@ -89,9 +86,9 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(setUser(user));
     }
-  }, []);
+  }, [dispatch]);
 
   if (user === null) {
     return (
