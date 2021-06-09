@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Users from "./components/Users";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Login from "./components/Login";
@@ -99,34 +101,46 @@ const App = () => {
     );
   } else {
     return (
-      <div>
-        <Notification />
-        <h2>blogs</h2>
-        <p>
-          {user.name} <button onClick={handleLogout}>logout</button>
-        </p>
-        <Togglable buttonLabel="new blog" ref={blogFormRef}>
-          <BlogForm handleSubmit={handleCreateBlog} />
-        </Togglable>
-        <div id="blog-list">
-          {blogs
-            .sort((a, b) => {
-              if (a.likes > b.likes) return -1;
-              else if (a.likes < b.likes) return 1;
-
-              return 0;
-            })
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                user={user}
-                onUpdate={handleUpdateBlog}
-                onDelete={handleDeleteBlog}
-              />
-            ))}
+      <Router>
+        <div>
+          <Link to="/users">users</Link>
         </div>
-      </div>
+
+        <Switch>
+          <Route path="/users">
+            <Users />
+          </Route>
+        </Switch>
+
+        <div>
+          <Notification />
+          <h2>blogs</h2>
+          <p>
+            {user.name} <button onClick={handleLogout}>logout</button>
+          </p>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <BlogForm handleSubmit={handleCreateBlog} />
+          </Togglable>
+          <div id="blog-list">
+            {blogs
+              .sort((a, b) => {
+                if (a.likes > b.likes) return -1;
+                else if (a.likes < b.likes) return 1;
+
+                return 0;
+              })
+              .map((blog) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  user={user}
+                  onUpdate={handleUpdateBlog}
+                  onDelete={handleDeleteBlog}
+                />
+              ))}
+          </div>
+        </div>
+      </Router>
     );
   }
 };
