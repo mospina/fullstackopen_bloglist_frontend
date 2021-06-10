@@ -16,7 +16,7 @@ const Users = () => {
       <h3>Users</h3>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
+          <li key={user.id}>{user.name} - {user.blogs.length}</li>
         ))}
       </ul>
     </div>
