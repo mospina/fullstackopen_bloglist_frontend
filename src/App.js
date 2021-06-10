@@ -105,6 +105,10 @@ const App = () => {
     marginBottom: 5,
   };
 
+  const padding = {
+    padding: 5,
+  };
+
   if (user === null) {
     return (
       <div>
@@ -115,8 +119,17 @@ const App = () => {
   } else {
     return (
       <Router>
+        <Notification />
         <div>
-          <Link to="/users">users</Link>
+          <Link style={padding} to="/users">
+            users
+          </Link>
+          <Link style={padding} to="/">
+            blogs
+          </Link>
+          <span style={padding}>
+            {user.name} <button onClick={handleLogout}>logout</button>
+          </span>
         </div>
 
         <Switch>
@@ -134,32 +147,29 @@ const App = () => {
               onDelete={handleDeleteBlog}
             />
           </Route>
+          <Route path="/">
+            <div>
+              <h2>blogs</h2>
+              <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                <BlogForm handleSubmit={handleCreateBlog} />
+              </Togglable>
+              <div id="blog-list">
+                {blogs
+                  .sort((a, b) => {
+                    if (a.likes > b.likes) return -1;
+                    else if (a.likes < b.likes) return 1;
+
+                    return 0;
+                  })
+                  .map((blog) => (
+                    <div style={blogStyle} key={blog.id}>
+                      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </Route>
         </Switch>
-
-        <div>
-          <Notification />
-          <h2>blogs</h2>
-          <p>
-            {user.name} <button onClick={handleLogout}>logout</button>
-          </p>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm handleSubmit={handleCreateBlog} />
-          </Togglable>
-          <div id="blog-list">
-            {blogs
-              .sort((a, b) => {
-                if (a.likes > b.likes) return -1;
-                else if (a.likes < b.likes) return 1;
-
-                return 0;
-              })
-              .map((blog) => (
-                <div style={blogStyle} key={blog.id}>
-                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-                </div>
-              ))}
-          </div>
-        </div>
       </Router>
     );
   }
