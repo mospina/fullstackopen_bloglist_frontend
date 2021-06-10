@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Users from "./components/Users";
+import User from "./components/User";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Login from "./components/Login";
@@ -14,6 +15,7 @@ import {
   updateBlog,
   deleteBlog,
 } from "./reducers/blogReducer";
+import { initializeUsers } from "./reducers/usersReducer";
 import {
   setNotification,
   deleteNotification,
@@ -22,7 +24,7 @@ import "./App.css";
 
 const App = () => {
   const user = useSelector(({ user }) => user);
-
+  const users = useSelector(({ users }) => users);
   const blogs = useSelector(({ blogs }) => blogs);
 
   const dispatch = useDispatch();
@@ -85,6 +87,10 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    dispatch(initializeUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
@@ -107,8 +113,11 @@ const App = () => {
         </div>
 
         <Switch>
+          <Route path="/users/:id">
+            <User users={users} />
+          </Route>
           <Route path="/users">
-            <Users />
+            <Users users={users} />
           </Route>
         </Switch>
 
