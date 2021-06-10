@@ -56,19 +56,18 @@ const App = () => {
     }
   };
 
-  const handleUpdateBlog = (id, changes) => {
+  const handleUpdateBlog = async (id, changes) => {
     try {
-      const updatedBlog = dispatch(updateBlog(id, changes));
-      console.log(updatedBlog);
+      const updatedBlog = await dispatch(updateBlog(id, changes));
       flashMessage(`${updatedBlog.title} was updated`, "info");
     } catch (error) {
       flashMessage(error.message, "error");
     }
   };
 
-  const handleDeleteBlog = (id) => {
+  const handleDeleteBlog = async (id) => {
     try {
-      dispatch(deleteBlog(id));
+      await dispatch(deleteBlog(id));
       flashMessage("Blog deleted", "info");
     } catch (error) {
       flashMessage(error.message, "error");
@@ -98,6 +97,14 @@ const App = () => {
     }
   }, [dispatch]);
 
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+
   if (user === null) {
     return (
       <div>
@@ -119,6 +126,14 @@ const App = () => {
           <Route path="/users">
             <Users users={users} />
           </Route>
+          <Route path="/blogs/:id">
+            <Blog
+              blogs={blogs}
+              user={user}
+              onUpdate={handleUpdateBlog}
+              onDelete={handleDeleteBlog}
+            />
+          </Route>
         </Switch>
 
         <div>
@@ -139,13 +154,9 @@ const App = () => {
                 return 0;
               })
               .map((blog) => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  user={user}
-                  onUpdate={handleUpdateBlog}
-                  onDelete={handleDeleteBlog}
-                />
+                <div style={blogStyle} key={blog.id}>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </div>
               ))}
           </div>
         </div>
