@@ -34,6 +34,15 @@ const Blog = ({ blogs, user, onUpdate, onDelete }) => {
           <button onClick={handleDelete}>remove</button>
         )}
       </p>
+      <div>
+        <h3>Comments</h3>
+        <ul>
+          {blog.comments.map((comment) => (
+            <li>{comment}</li>
+          )
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
