@@ -10,6 +10,7 @@
  *   url: string
  *   author: string
  *   likes: number
+ *   comments: string[]
  * }
  */
 
@@ -71,6 +72,10 @@ export const initializeBlogs = () => {
       data: blogs,
     });
   };
+};
+
+export const addComment = (id, comment) => {
+  console.log(id, comment);
 };
 
 export default blogReducer;

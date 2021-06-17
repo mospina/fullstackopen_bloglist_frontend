@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import CommentForm from "./CommentForm";
 
 const Blog = ({ blogs, user, onUpdate, onDelete }) => {
   const id = useParams().id;
@@ -36,11 +37,11 @@ const Blog = ({ blogs, user, onUpdate, onDelete }) => {
       </p>
       <div>
         <h3>Comments</h3>
+        <CommentForm blog={blog} />
         <ul>
-          {blog.comments.map((comment) => (
-            <li>{comment}</li>
-          )
-          )}
+          {blog.comments.map((comment, index) => (
+            <li key={index}>{comment}</li>
+          ))}
         </ul>
       </div>
     </div>
