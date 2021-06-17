@@ -15,6 +15,7 @@
  */
 
 import blogService from "../services/blogs";
+import commentService from "../services/comment";
 
 const blogReducer = (state = [], action) => {
   switch (action.type) {
@@ -75,7 +76,13 @@ export const initializeBlogs = () => {
 };
 
 export const addComment = (id, comment) => {
-  console.log(id, comment);
+  return async (dispatch) => {
+    const updatedBlog = await commentService.create(id, comment);
+    dispatch({
+      type: "UPDATE_BLOG",
+      data: updatedBlog,
+    });
+  };
 };
 
 export default blogReducer;

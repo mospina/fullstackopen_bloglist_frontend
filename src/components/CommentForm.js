@@ -8,6 +8,7 @@ const CommentForm = ({ blog }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const content = event.target.content.value;
+    event.target.content.value = "";
     dispatch(addComment(blog.id, { content }));
   };
 
