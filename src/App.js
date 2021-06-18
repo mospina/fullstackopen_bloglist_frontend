@@ -1,6 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  Container,
+  Paper,
+  List,
+  ListItem,
+  AppBar,
+  Toolbar,
+  Button,
+} from "@material-ui/core";
 import Users from "./components/Users";
 import User from "./components/User";
 import Blog from "./components/Blog";
@@ -97,80 +106,76 @@ const App = () => {
     }
   }, [dispatch]);
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   const padding = {
     padding: 5,
   };
 
   if (user === null) {
     return (
-      <div>
+      <Container>
         <Notification />
         <Login handleLogin={handleLogin} />
-      </div>
+      </Container>
     );
   } else {
     return (
-      <Router>
-        <Notification />
-        <div>
-          <Link style={padding} to="/users">
-            users
-          </Link>
-          <Link style={padding} to="/">
-            blogs
-          </Link>
-          <span style={padding}>
-            {user.name} <button onClick={handleLogout}>logout</button>
-          </span>
-        </div>
+      <Container>
+        <Router>
+          <AppBar position="static">
+            <Toolbar>
+              <Button color="inherit" component={Link} to="/users">
+                users
+              </Button>
+              <Button color="inherit" component={Link} to="/">
+                blogs
+              </Button>
+              <span style={padding}>
+                {user.name} <Button onClick={handleLogout}>logout</Button>
+              </span>
+            </Toolbar>
+            <Notification />
+          </AppBar>
 
-        <Switch>
-          <Route path="/users/:id">
-            <User users={users} />
-          </Route>
-          <Route path="/users">
-            <Users users={users} />
-          </Route>
-          <Route path="/blogs/:id">
-            <Blog
-              blogs={blogs}
-              user={user}
-              onUpdate={handleUpdateBlog}
-              onDelete={handleDeleteBlog}
-            />
-          </Route>
-          <Route path="/">
-            <div>
-              <h2>blogs</h2>
-              <Togglable buttonLabel="new blog" ref={blogFormRef}>
-                <BlogForm handleSubmit={handleCreateBlog} />
-              </Togglable>
-              <div id="blog-list">
-                {blogs
-                  .sort((a, b) => {
-                    if (a.likes > b.likes) return -1;
-                    else if (a.likes < b.likes) return 1;
+          <Switch>
+            <Route path="/users/:id">
+              <User users={users} />
+            </Route>
+            <Route path="/users">
+              <Users users={users} />
+            </Route>
+            <Route path="/blogs/:id">
+              <Blog
+                blogs={blogs}
+                user={user}
+                onUpdate={handleUpdateBlog}
+                onDelete={handleDeleteBlog}
+              />
+            </Route>
+            <Route path="/">
+              <div>
+                <h2>blogs</h2>
+                <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                  <BlogForm handleSubmit={handleCreateBlog} />
+                </Togglable>
+                <List component={Paper}>
+                  {blogs
+                    .sort((a, b) => {
+                      if (a.likes > b.likes) return -1;
+                      else if (a.likes < b.likes) return 1;
 
-                    return 0;
-                  })
-                  .map((blog) => (
-                    <div style={blogStyle} key={blog.id}>
-                      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-                    </div>
-                  ))}
+                      return 0;
+                    })
+                    .map((blog) => (
+                      <ListItem key={blog.id}>
+                        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                      </ListItem>
+                    ))}
+                </List>
               </div>
-            </div>
-          </Route>
-        </Switch>
-      </Router>
+            </Route>
+          </Switch>
+        </Router>
+      </Container>
     );
   }
 };
